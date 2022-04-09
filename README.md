@@ -1,2 +1,2 @@
-# proyectoFinal
-Proyecto final para el curso de backend de coderhouse
+# Ariel Rando 36620374
+Proyecto para el curso de Backend de CoderHouse

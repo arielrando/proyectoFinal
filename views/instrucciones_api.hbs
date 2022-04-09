@@ -1,0 +1,22 @@
+<h1>Rutas para las APIs</h1>
+    <h2>Productos - /api/productos</h2>
+    <ul>
+        <li><h4>GET '/api/productos' -> devuelve todos los productos.</h4></li>
+        <li><h4>GET '/api/productos/:id' -> devuelve un producto según su id.</h4></li>
+        <li><h4>POST '/api/productos' -> recibe y agrega un producto, y lo devuelve con su id asignado (SOLO ADMIN).</h4>
+        <p>cuerpo del body a enviar: {"title":"string","price":"integer ó float","thumbnail":"string"}</p></li>
+        <li><h4>PUT '/api/productos/:id' -> recibe y actualiza un producto según su id (SOLO ADMIN).</h4>
+        <p>cuerpo del body a enviar: {"title":"string","price":"integer ó float","thumbnail":"string"}</p></li>
+        <li><h4>DELETE '/api/productos/:id' -> elimina un producto según su id (SOLO ADMIN).</h4></li>
+    </ul>
+    <h2>Carrito - /api/productos</h2>
+    <ul>
+        <li><h4>POST '/api/carrito' -> crea un carrito nuevo y devuelve su ID.</h4></li>
+        <li><h4>DELETE '/api/carrito/:id' -> elimina un carrito según su id.</h4></li>
+        <li><h4>GET '/api/carrito/:id/productos' -> devuelve todos los productos de un carrito.</h4></li>
+        <li><h4>POST '/api/carrito/:id/productos' -> recibe y agrega un producto al carrito indicado en el id.</h4>
+        <p>cuerpo del body a enviar: {"id":integer(id de producto existente),"cantidad":integer}</p></li>
+        <li><h4>DELETE '/api/carrito/:id/productos/:idProducto' -> elimina un producto de carrito (id) según el id de producto indicado (idProducto).</h4></li>
+    </ul>
+    
+    <a href="/" class="btn btn-dark btn-sm active" role="button" aria-pressed="true">Volver</a>
