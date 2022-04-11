@@ -1,5 +1,6 @@
 require('dotenv').config();
 const generalDao = require('../daos/generalDao.js');
+const logger = require('../utils/Logger.js');
 
 const mongooseAux = require('mongoose');
 const arrayProductos = new mongooseAux.Schema({
@@ -48,7 +49,7 @@ module.exports = class Carrito extends generalDao {
             let resultado = await this.save(carrito);
             return resultado;
         }catch(err){
-            console.log('No se pudo grabar el archivo de los carritos: ',err);
+            logger.error('No se pudo grabar el archivo de los carritos: ',err);
         }
     }
 
@@ -71,7 +72,7 @@ module.exports = class Carrito extends generalDao {
             }
             return result;
         }catch(err){
-            console.log('No se encontro el carrito ',num,': ',err);
+            logger.error('No se encontro el carrito ',num,': ',err);
         }
     }
 
@@ -117,7 +118,7 @@ module.exports = class Carrito extends generalDao {
                 return {status:2, mensaje:"El producto "+producto.id+" no existe"}
             }
         }catch(err){
-            console.log('No se pudo agregar el producto ',producto.id,' al carrito',carrito,': ',err);
+            logger.error('No se pudo agregar el producto ',producto.id,' al carrito',carrito,': ',err);
         }
     }
 
@@ -142,7 +143,7 @@ module.exports = class Carrito extends generalDao {
                 return {status:2, mensaje:"El producto "+producto+" no existe"}
             }
         }catch(err){
-            console.log('No se pudo agregar el producto ',producto,' al carrito',carrito,': ',err);
+            logger.error('No se pudo agregar el producto ',producto,' al carrito',carrito,': ',err);
         }
     }
 }

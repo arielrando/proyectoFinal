@@ -1,3 +1,4 @@
+const logger = require("../utils/Logger.js");
 module.exports = class Firebaseclient {
     constructor(tabla){
         this.admin = require("firebase-admin");
@@ -43,7 +44,7 @@ module.exports = class Firebaseclient {
                 })();
             }
         }catch(err){
-            console.log('no se pudieron inicializar las tablas: ',err);
+            logger.error('no se pudieron inicializar las tablas: ',err);
         }
     }
 
@@ -56,11 +57,11 @@ module.exports = class Firebaseclient {
                 return null;
             }
         }catch(err){
-            console.log('No se pudo buscar el dato ',num,' de la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo buscar el dato ',num,' de la tabla ',this.tabla,': ',err);
         }
     }
 
-    async getCustom(arrayCustom, cantResultados = 0) {
+    async getCustom(arrayCustom, orden=null, cantResultados = 0) {
         try{
             let doc = this.collection;
             if(arrayCustom.length>0){
@@ -68,22 +69,28 @@ module.exports = class Firebaseclient {
                         doc = doc.where(arrayCustom[i].fieldName,'==',arrayCustom[i].value)
                     }
             }
+            if(orden && orden.fieldName){
+                if(!orden.desc){
+                    doc = doc.orderBy(orden.fieldName);
+                }else{
+                    doc = doc.orderBy(orden.fieldName, 'desc');
+                }
+            }
+            if(isNaN(cantResultados)){
+                throw "The number of 'results searched' must be a valid number" ;
+            }
+            if(cantResultados>0){
+                doc = doc.limit(cantResultados);
+            }
             const snapshot = await doc.get();
             let resultado = Array();
             snapshot.forEach(doc => {
                 resultado.push({ id: doc.id, ...doc.data() })
             })
-
-            if(isNaN(cantResultados)){
-                throw "The number of 'results searched' must be a valid number" ;
-            }
-            if(cantResultados>0){
-                resultado = resultado.slice(0, cantResultados);
-            }
+            
             return resultado;
         }catch(err){
-            console.log('No se pudo buscar el dato de la tabla ',this.tabla,': ',err);
-            throw 'fatal error, check the logs'
+            logger.error('No se pudo buscar el dato de la tabla ',this.tabla,': ',err);
         }
     }
 
@@ -100,7 +107,7 @@ module.exports = class Firebaseclient {
                 return null;
             }
         }catch(err){
-            console.log('No se pudo obtener los datos de la tabla ',this.tabla,' de la base de datos: ',err);
+            logger.error('No se pudo obtener los datos de la tabla ',this.tabla,' de la base de datos: ',err);
         }
     }
 
@@ -113,7 +120,7 @@ module.exports = class Firebaseclient {
                 return null;
             }
         }catch(err){
-            console.log('No se pudo grabar el dato en la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo grabar el dato en la tabla ',this.tabla,': ',err);
         }
     }
 
@@ -128,12 +135,12 @@ module.exports = class Firebaseclient {
                         respuesta = item;
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    logger.error(error);
                 });
             }
             return respuesta;
         }catch(err){
-            console.log('No se pudo modificar el dato ',num,' de la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo modificar el dato ',num,' de la tabla ',this.tabla,': ',err);
         }
     }
 
@@ -147,12 +154,12 @@ module.exports = class Firebaseclient {
                         respuesta = true
                     }
                 }).catch(function(error) {
-                    console.log(error);
+                    logger.error(error);
                 });
             }
             return respuesta;
         }catch(err){
-            console.log('No se pudo modificar el dato ',num,' de la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo modificar el dato ',num,' de la tabla ',this.tabla,': ',err);
         }
     }
 

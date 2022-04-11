@@ -28,6 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 const objchat = require('./models/Chat.js');
+const chatRepo = require('./repos/repoChat.js');
 
 app.use(express.static(path.join(__dirname,'../public')));
 
@@ -50,7 +51,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false ,
     cookie: {
-        maxAge: 60000*10
+        maxAge: 60000*30
     } 
 }));
 
@@ -62,7 +63,8 @@ io.on('connection', (socket) => {
         (async() => {
             data = JSON.parse(data);
             data.fecha = Date();
-            let chat = new objchat(data.mensaje, data.fecha, data.autor.mail, data.autor.nombre, data.autor.apellido, data.autor.edad, data.autor.alias, data.autor.avatar);
+            data.timestamp  = Date.now();
+            let chat = new objchat(data.mensaje, data.fecha, data.timestamp, data.mail);
             await chat.saveChat();
             let ahora = moment().format('DD/MM/YYYY HH:mm:ss');
             data.fecha = ahora;
@@ -72,8 +74,9 @@ io.on('connection', (socket) => {
 
     socket.on('recuperarMensajes',data  => {
         (async() => {
-            let chat = new objchat();
-            let todos = await chat.getAll();
+            let chat = new chatRepo();
+            let todos = await chat.getCustom([],{fieldName:"timestamp", desc:true},10);
+            todos = todos.reverse()
             if(todos.length>0){
                 const schemaAutor = new schemaNormalizr.Entity('autor',{},{idAttribute:'mail'});
                 const schemaMensaje = new schemaNormalizr.Entity('mensaje',{autor: schemaAutor});

@@ -2,32 +2,20 @@ require('dotenv').config();
 const chatRepo = require('../repos/repoChat.js');
 
 module.exports = class Chat extends chatRepo{
-    constructor(mensaje = '', fecha = '', mail = '', nombre = '', apellido = '', edad = '', alias = '', avatar = ''){
+    constructor(mensaje = '', fecha = '',timestamp = '', mail = ''){
         super();
         this.mensaje = mensaje;
         this.fecha = fecha;
-        this.autor = {
-            mail: mail,
-            nombre: nombre,
-            apellido: apellido,
-            edad: edad,
-            alias: alias,
-            avatar: avatar
-        }
+        this.timestamp = timestamp;
+        this.mail= mail
     }
 
     async saveChat(){
         let chat = {
-            autor: {
-                mail: this.autor.mail,
-                nombre: this.autor.nombre,
-                apellido: this.autor.apellido,
-                edad: this.autor.edad,
-                alias: this.autor.alias,
-                avatar: this.autor.avatar
-              },
+              mail: this.mail,
               mensaje: this.mensaje,
-              fecha: this.fecha
+              fecha: this.fecha,
+              timestamp: this.timestamp
         };
 
         await this.save(chat);

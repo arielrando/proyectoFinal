@@ -1,14 +1,18 @@
+const logger = require('../utils/Logger.js');
 module.exports = class MongoDBclient {
     constructor(tabla, esquema){
-        let {optionsMongoDB} = require('../../config.js');
-        const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
-        const mongoose = require('mongoose');
-        this.mongooseClient = mongoose;
         (async() => {
-            this.connection =  await mongoose.connect(optionsMongoDB.url);
+            let {optionsMongoDB} = require('../../config.js');
+            const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
+            const mongoose = require('mongoose');
+            this.mongooseClient = mongoose;
+            if(typeof mongooseConnection !== 'undefined' && mongooseConnection){
+                this.connection =  mongooseConnection;
+            }else{
+                this.connection =  await mongoose.connect(optionsMongoDB.url);
+            }
             this.tabla = tabla;
             this.esquemaTabla = new mongoose.Schema(esquema);
-
             this.esquemaTabla.options.toObject = {
                 transform: function(doc, ret, options) {
                     ret.id = ret._id.toString();
@@ -27,7 +31,6 @@ module.exports = class MongoDBclient {
               } catch (error) {
                 this.modeloTabla = mongoose.model(tabla, this.esquemaTabla);
               }
-            
         })();
     }
 
@@ -54,7 +57,7 @@ module.exports = class MongoDBclient {
                 ]);
             }
         }catch(err){
-            console.log('no se pudieron inicializar las tablas: ',err);
+            logger.error('no se pudieron inicializar las tablas: ',err);
         }
     }
 
@@ -65,7 +68,7 @@ module.exports = class MongoDBclient {
             resultado = await objeto.save();
             return resultado.id.toString();
         }catch(err){
-            console.log('No se pudo grabar el dato en la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo grabar el dato en la tabla ',this.tabla,': ',err);
         }
     }
 
@@ -80,12 +83,13 @@ module.exports = class MongoDBclient {
                 return null;
             }
         }catch(err){
-            console.log('No se pudo buscar el dato ',num,' de la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo buscar el dato ',num,' de la tabla ',this.tabla,': ',err);
         }
     }
 
-    async getCustom(arrayCustom, cantResultados = 0){
+    async getCustom(arrayCustom,orden=null, cantResultados = 0){
         try{
+            let upperQuery = []
             let query = {};
             if(arrayCustom.length>0){
                 query = {
@@ -98,18 +102,38 @@ module.exports = class MongoDBclient {
                         query['$and'].push(aux);
                     }
                 };
+                let aux2 = {
+                    "$redact": {
+                        "$cond": [
+                            query,
+                            "$$KEEP",
+                            "$$PRUNE"
+                        ]
+                    }
+                }
+                upperQuery.push(aux2)
             }
             
-            let resultado = await this.modeloTabla.find(query);
-            if(isNaN(cantResultados)){
-                throw "La cantidad de resultados debe ser un numero valido" ;
+            if(orden && orden.fieldName){
+                if(!orden.desc){
+                    upperQuery.push({ "$sort": { [orden.fieldName]: 1 } });
+                }else{
+                    upperQuery.push({ "$sort": { [orden.fieldName]: -1 } });
+                }
             }
+
             if(cantResultados>0){
-                resultado = resultado.slice(0, cantResultados);
+                upperQuery.push({ "$limit": cantResultados });
             }
+            
+            let resultado = await this.modeloTabla.aggregate(upperQuery);
+            resultado.forEach(function (value, i) {
+                resultado[i].id = resultado[i]._id.toString()
+            });
+            
             return resultado;
         }catch(err){
-            console.log('No se pudo buscar el dato ',JSON.stringify(arrayCustom),' de la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo buscar el dato ',JSON.stringify(arrayCustom),' de la tabla ',this.tabla,': ',err);
         }
     }
 
@@ -118,7 +142,7 @@ module.exports = class MongoDBclient {
             let resultado = await this.modeloTabla.find().lean({ virtuals: true });
             return resultado;
         }catch(err){
-            console.log('No se pudo obtener los datos de la tabla ',this.tabla,' de la base de datos: ',err);
+            logger.error('No se pudo obtener los datos de la tabla ',this.tabla,' de la base de datos: ',err);
         }
     }
 
@@ -138,11 +162,11 @@ module.exports = class MongoDBclient {
                     return null;
                 }
             }else{
-                console.log('ID de item invalido!');
+                logger.error('ID de item invalido!');
                 return null;
             }
         }catch(err){
-            console.log('No se pudo buscar el dato ',num,' de la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo buscar el dato ',num,' de la tabla ',this.tabla,': ',err);
         }
     }
 
@@ -161,11 +185,11 @@ module.exports = class MongoDBclient {
                     return null;
                 }
             }else{
-                console.log('ID de item invalido!');
+                logger.error('ID de item invalido!');
                 return null;
             }
         }catch(err){
-            console.log('No se pudo buscar el dato ',num,' de la tabla ',this.tabla,': ',err);
+            logger.error('No se pudo buscar el dato ',num,' de la tabla ',this.tabla,': ',err);
         }
     }
 

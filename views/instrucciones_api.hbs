@@ -1,22 +1,48 @@
 <h1>Rutas para las APIs</h1>
+    <h2>Usuarios - /api/users</h2>
+    <ul>
+        <li><h5><span style="color: rgb(250, 184, 84);">POST</span> '/api/users/login' -> URL para loguearse.</h5>
+        <p>cuerpo del body a enviar: <b>{ "username":"test@test.com","password":"test"}</b></p></li>
+        <li><h5><span style="color: rgb(13, 122, 28);">GET</span> '/api/users/me' -> devuelve los datos del usuario.</h5></li>
+        <li><h5><span style="color: rgb(250, 184, 84);">POST</span> '/api/users/registro' -> URL para crear un usuario, se logueara automaticamente con el usuario nuevo.</h5>
+        <p>cuerpo del body a enviar: 
+            <b>{ "usernameRegistro": "test@test.com",
+            "passwordRegistro": "test",
+            "nombreRegistro": "test",
+              "apellidoRegistro": "test",
+              "direccionRegistro": "test 123",
+              "edadRegistro": 36,
+              "telefonoRegistro": "222555666",
+              "telefonoRegistroInt": "54222555666",
+              "foto": "test.jpg"}</b></p></li>
+        <li><h5><span style="color: rgb(13, 122, 28);">GET</span> '/api/users/logout' -> URL para desloguearse.</h5></li>
+    </ul>
     <h2>Productos - /api/productos</h2>
     <ul>
-        <li><h4>GET '/api/productos' -> devuelve todos los productos.</h4></li>
-        <li><h4>GET '/api/productos/:id' -> devuelve un producto según su id.</h4></li>
-        <li><h4>POST '/api/productos' -> recibe y agrega un producto, y lo devuelve con su id asignado (SOLO ADMIN).</h4>
-        <p>cuerpo del body a enviar: {"title":"string","price":"integer ó float","thumbnail":"string"}</p></li>
-        <li><h4>PUT '/api/productos/:id' -> recibe y actualiza un producto según su id (SOLO ADMIN).</h4>
-        <p>cuerpo del body a enviar: {"title":"string","price":"integer ó float","thumbnail":"string"}</p></li>
-        <li><h4>DELETE '/api/productos/:id' -> elimina un producto según su id (SOLO ADMIN).</h4></li>
+        <li><h5><span style="color: rgb(13, 122, 28);">GET</span> '/api/productos' -> devuelve todos los productos.</h5></li>
+        <li><h5><span style="color: rgb(13, 122, 28);">GET</span> '/api/productos/:id' -> devuelve un producto según su id.</h5></li>
+        <li><h5><span style="color: rgb(250, 184, 84);">POST</span> '/api/productos' -> recibe y agrega un producto, y lo devuelve con su id asignado (SOLO ADMIN).</h5>
+        <p>cuerpo del body a enviar: <b>{"nombre":"test","precio":"10","foto":"url","stock":10,"codigo":"01"}</b></p></li>
+        <li><h5><span style="color: rgb(80, 97, 170);">PUT</span> '/api/productos/:id' -> recibe y actualiza un producto según su id (SOLO ADMIN).</h5>
+        <p>cuerpo del body a enviar: <b>{"nombre":"new name","precio":"45","foto":"url","stock":11,"codigo":"01"}</b></p></li>
+        <li><h5><span style="color: rgb(185, 34, 34);">DELETE</span> '/api/productos/:id' -> elimina un producto según su id (SOLO ADMIN).</h5></li>
     </ul>
-    <h2>Carrito - /api/productos</h2>
+    <h2>Carrito - /api/carrito</h2>
     <ul>
-        <li><h4>POST '/api/carrito' -> crea un carrito nuevo y devuelve su ID.</h4></li>
-        <li><h4>DELETE '/api/carrito/:id' -> elimina un carrito según su id.</h4></li>
-        <li><h4>GET '/api/carrito/:id/productos' -> devuelve todos los productos de un carrito.</h4></li>
-        <li><h4>POST '/api/carrito/:id/productos' -> recibe y agrega un producto al carrito indicado en el id.</h4>
-        <p>cuerpo del body a enviar: {"id":integer(id de producto existente),"cantidad":integer}</p></li>
-        <li><h4>DELETE '/api/carrito/:id/productos/:idProducto' -> elimina un producto de carrito (id) según el id de producto indicado (idProducto).</h4></li>
+        <li><h5><span style="color: rgb(250, 184, 84);">POST</span> '/api/carrito' -> crea un carrito nuevo y devuelve su ID (SOLO USUARIOS LOGUEADOS).</h5></li>
+        <li><h5><span style="color: rgb(250, 184, 84);">POST</span> '/api/carrito/productos' -> agrega un producto a un carrito, si no existe el carrito crea uno (SOLO USUARIOS LOGUEADOS).</h5>
+        <p>cuerpo del body a enviar: <b>{ "id":"61ac1a184cb6445f8fe81797","cantidad":1}</b></p></li>
+        <li><h5><span style="color: rgb(13, 122, 28);">GET</span> '/api/carrito/productos' -> devuelve todos los productos de un carrito (SOLO USUARIOS LOGUEADOS).</h5></li>
+        <li><h5><span style="color: rgb(185, 34, 34);">DELETE</span> '/api/carrito/:id' -> elimina un carrito según su id (SOLO USUARIOS LOGUEADOS).</h5></li>
+        <li><h5><span style="color: rgb(185, 34, 34);">DELETE</span> 'api/carrito' -> elimina el carrito entero (SOLO USUARIOS LOGUEADOS). </h5></li>
+        <li><h5><span style="color: rgb(13, 122, 28);">GET</span> '/api/carrito/finalizar' -> Finaliza el carrito y crea la orden (SOLO USUARIOS LOGUEADOS).</h5></li>
+    </ul>
+     <h2>Ordenes - /api/ordenes</h2>
+    <ul>
+        <li><h5><span style="color: rgb(13, 122, 28);">GET</span> '/api/ordenes' -> devuelve todos los carritos del usaurio logueado (SOLO USUARIOS LOGUEADOS).</h5></li>
+        <li><h5><span style="color: rgb(13, 122, 28);">GET</span> '/api/ordenes/:id' -> devuelve los datos de un carrito especifico del usuario logueado (SOLO USUARIOS LOGUEADOS).</h5></li>
     </ul>
     
-    <a href="/" class="btn btn-dark btn-sm active" role="button" aria-pressed="true">Volver</a>
+    <h5>Redireccionamientos</h5>
+    <a href="/info" class="btn btn-dark btn-sm active btn-ir-a" role="button" aria-pressed="true">Info</a></br>
+    <a href="/chat" class="btn btn-dark btn-sm active btn-ir-a" role="button" aria-pressed="true">Chat</a>

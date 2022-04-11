@@ -1,0 +1,33 @@
+<div style="height:50px;">
+    <h2>Caja de chat</h2>
+</div>
+<div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-4">
+        <div class="chat">
+            <div class="chat-history border border-secondary" id="chat-history" >
+                <ul id="cajaChat">
+
+                </ul>
+            </div> 
+            <br>
+            
+        </div> 
+    </div>
+    <div class="col-sm-4">
+        <label for="mailMsj">E-Mail:</label>
+            <input class="form-control" type="text" name="mailMsj" id="mailMsj" placeholder="E-Mail" />
+            <br>
+            <span>Mensaje a enviar:</span> 
+            <br>
+            <textarea class="form-control" name="mensaje" id="mensaje" placeholder="Mensaje" rows="2" cols="50"></textarea>
+            <button class="btn btn-primary btn-sm active" onclick="enviar();">Enviar</button>
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+
+<h5>Redireccionamientos</h5>
+    <a href="/instrucciones_api" class="btn btn-dark btn-sm active btn-ir-a" role="button" aria-pressed="true">Instrucciones</a></br>
+    <a href="/info" class="btn btn-dark btn-sm active btn-ir-a" role="button" aria-pressed="true">Info</a>
+
+

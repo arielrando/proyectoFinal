@@ -4,6 +4,7 @@ const usuarios = require('../models/Users.js');
 const userObj = new usuarios();
 const nodeMailer = require('./Nodemailer.js');
 require('dotenv').config();
+const logger = require('./Logger.js');
 
 function isValidPassword(user, password) {
   return bCrypt.compareSync(password, user.password)
@@ -25,7 +26,7 @@ module.exports = function passportConfig(passport) {
       (req, email, pass, done) => {
         (async() => {
           try {
-            let user = await userObj.getCustom([{fieldName: 'email', value: email}],1);
+            let user = await userObj.getCustom([{fieldName: 'email', value: email}],{},1);
 
             if (user[0]) {
               throw "el usuario ya existe!";
@@ -53,7 +54,7 @@ module.exports = function passportConfig(passport) {
               return done(null, createdUser);
             }
           } catch (err) {
-            console.log('Error al hacer el registro: ' + err)
+            logger.error('Error al hacer el registro: ' + err)
             return done(null, false)
           }
           
@@ -67,22 +68,21 @@ module.exports = function passportConfig(passport) {
     new LocalStrategy((username, password, done) => {
       (async() => {
         try {
-          let user = await userObj.getCustom([{fieldName: 'email', value: username}],1);
-
+          let user = await userObj.getCustom([{fieldName: 'email', value: username}],{},1);
           if (!user[0]) {
-            console.log('el usuario no existe!');
+            logger.debug('el usuario no existe!');
             return done(null, false);
           }
 
           if (!isValidPassword(user[0], password)) {
-            console.log('contraseña invalida!');
+            logger.debug('contraseña invalida!');
             return done(null, false);
           }
     
           return done(null, user[0].id);
 
         } catch (err) {
-          console.log('Error al hacer el login: ' + err)
+          logger.error('Error al hacer el login: ' + err)
           return done(err)
         }
       })();

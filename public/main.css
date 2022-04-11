@@ -54,3 +54,10 @@ body{
 .iti--allow-dropdown{
     color: #2f3138;
 }
+
+.btn-ir-a{
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+}

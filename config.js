@@ -24,6 +24,8 @@ const optionsFirebase = {
     switch (db) {
         case 'mongoDB':
             const MongoDBclient = require('./clases/drivers/MongoDBclient.js');
+            const mongoose = require('mongoose');
+            global.mongooseConnection =  await mongoose.connect(optionsMongoDB.url);
             await MongoDBclient.inicializarTablas();
         break;
         case 'firebase':

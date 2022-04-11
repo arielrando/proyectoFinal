@@ -33,8 +33,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "nodemon": "nodemon index.js -p 8080",
-    "test": "mocha tests/*.test.js --exit"
+    "nodemon": "nodemon index.js "
   },
   "repository": {
     "type": "git",

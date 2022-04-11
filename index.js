@@ -7,25 +7,33 @@ const logger = require('./clases/utils/Logger.js');
 
 global.Ruta = Router;
 global.carritoId = null;
-global.DBdefault = process.env.DBdefault;
+global.DBdefault = '';
 
 const optionsArgv = {
     default: {
         puerto: process.env.PORT || 8080,
         modo: 'FORK',
-        database: ''
+        ambiente: 'dev',
+        basedatos: ''
     },
     alias: {
         p: 'puerto',
         m: 'modo',
-        d: 'database'
+        a: 'ambiente',
+        b: 'basedatos'
     }
 }
 
-const argumentos = argv(process.argv.slice(3),optionsArgv);
+const argumentos = argv(process.argv.slice(2),optionsArgv);
 
-if(argumentos.database){
-    DBdefault = argumentos.database;
+if(typeof argumentos.ambiente !== 'undefined' && argumentos.ambiente=='prod'){
+    DBdefault = 'firebase';
+}else{
+    DBdefault = 'mongoDB';
+}
+
+if(typeof argumentos.basedatos !== 'undefined' && argumentos.basedatos){
+    DBdefault = argumentos.basedatos;
 }
 
 const {inicializarTablas} = require('./config.js');

@@ -2,8 +2,6 @@ const indexView = new Ruta();
 const producto = require('./clases/models/Products.js');
 const carrito = require('./clases/models/Cart.js');
 const uploadImage = require('./clases/utils/UploadImage.js');
-const nodeMailer = require('./clases/utils/Nodemailer.js');
-const textMessage = require('./clases/utils/TextMassage.js');
 require('dotenv').config();
 
 const prod = new producto();
@@ -14,7 +12,11 @@ indexView.get('/',(req, res) => {
 })
 
 indexView.get('/instrucciones_api',(req, res) => {
-    res.render('instrucciones_api.hbs',{usuarioLogin: req.user});
+    res.render('instrucciones_api.hbs');
+});
+
+indexView.get('/chat',(req, res) => {
+    res.render('chat.hbs');
 });
 
 indexView.get('/info',(req, res) => {
