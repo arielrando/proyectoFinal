@@ -58,3 +58,6 @@ Mas allá de que el proyecto solo sirve datos en formato JSON existen 3 vistas q
 - http://localhost:8080/info: Podrá ver informacion del proyecto como plataforma, carpeta desde donde se ejecuta, argumentos de entrada, etc
 - http://localhost:8080/instrucciones_api: Podrá ver todos los endpoints de las apis y que datos en formato JSON tiene que mandar en el body de la petición.
 - http://localhost:8080/chat: Un pequeño chat que permite escribir mensajes. El mismo usa Websockets lo que permite abrir mas de una instancia del proyecto, enviar mensajes y visualizar todos los mensajes en tiempo real en todas las ventanas.
+
+## Link a Heroku
+https://proyecto-final-ariel-coder.herokuapp.com/info
